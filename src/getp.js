@@ -3,7 +3,7 @@ function get_init(){
       headers: {
         'content-type': 'application/json',
         'Accept': 'application/json',
-        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').attr('content')
+        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
       },
       credentials: 'same-origin'
     };
