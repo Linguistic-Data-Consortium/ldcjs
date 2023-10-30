@@ -7,7 +7,7 @@ let f;
 function setf(x){ f = x; }
 
 const defaults = {region: 'us-east-1'};
-const cognito = new f.CognitoIdentityClient({...defaults});
+let cognito;
 
 let credentials;
 let s3;
@@ -17,6 +17,7 @@ s3 = fetch("/token", { method: "POST" })
   .then(res => res.json())
   .then( t => {
     let token = {...t};
+    if(!cognito) cognito = new f.CognitoIdentityClient({...defaults});
     token.client = cognito;
     credentials = f.fromCognitoIdentity(token);
     return new f.S3Client({credentials, ...defaults});
