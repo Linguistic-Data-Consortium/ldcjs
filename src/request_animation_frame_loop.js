@@ -1,4 +1,4 @@
-function requst_animation_frame_loop_init(){
+function request_animation_frame_loop_init(){
     if(!window.ldc) window.ldc = {};
     if(!window.ldc.vars) window.ldc.vars = {};
     if(!window.ldc.vars.loop){
@@ -15,5 +15,5 @@ function requst_animation_frame_loop_init(){
     }
   }
   
-  export { requst_animation_frame_loop_init }
+  export { request_animation_frame_loop_init }
   
