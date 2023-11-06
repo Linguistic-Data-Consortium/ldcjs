@@ -4,15 +4,14 @@
 
 let f;
 
-function setf(x){ f = x; }
-
 const defaults = {region: 'us-east-1'};
 let cognito;
 
 let credentials;
 let s3;
 
-const refreshToken = () => {
+function refreshToken(x){
+    f = x;
 s3 = fetch("/token", { method: "POST" })
   .then(res => res.json())
   .then( t => {
@@ -24,7 +23,7 @@ s3 = fetch("/token", { method: "POST" })
   })
   .catch( e => { console.error("Error while getting token", e); });
 };
-refreshToken();
+// refreshToken();
 
 const getTranscribeClient = () => {
     let c = {...defaults}
@@ -78,7 +77,6 @@ function s3url(url){
 }
 
 export {
-  setf,
   getSignedUrlPromise,
   getTranscribeClient,
   listObjectsV2,
