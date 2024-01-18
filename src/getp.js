@@ -8,6 +8,13 @@ function get_init(){
       credentials: 'same-origin'
     };
   };
+  function get_init_simple(){
+    return {
+      headers: {
+        'Accept': 'application/json'
+      }
+    };
+  };
   function get_init_wav(b, e){
     return {
       headers: {
@@ -81,5 +88,10 @@ function get_init(){
       return console.error('Error:', e);
     });
   }
-  export { getp, postp, patchp, deletep, getp_wav }
+  function getp_simple(url) {
+    return fetch(url, get_init_simple()).then(responsef).catch(function(e) {
+      return console.error('Error:', e);
+    });
+  };
+  export { getp, postp, patchp, deletep, getp_wav, getp_simple }
   
