@@ -65,7 +65,7 @@ function play_callback(t){
   // The value is passed in with play_audio_object and related functions.
   // callf(custom_play_callback);
   // optimize, we want this function to be fast
-  if(custom_play_callback) custom_play_callback(current_audio_node, playing);
+  if(custom_play_callback) custom_play_callback(current_audio_node, playing, currently_playing_audio, now);
   // you can also optimize by not checking playing == true in the callback, but the parameter is left here just in case
 
 }
