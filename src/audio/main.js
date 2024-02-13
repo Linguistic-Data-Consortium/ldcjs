@@ -242,6 +242,14 @@ function setup_stereo(k){
   };
 }
 
+function set_audio_id_to_channel(id, channel){
+  const o = audio_map.get(id);
+  if(o.audios){
+    o.audio_object = o.audios[channel];
+    if(o.stereo) set_audio_to_channel(o.audio_elements[id], channel);
+  }
+}
+
 export {
   is_playing,
   set_playback_rate,
@@ -252,6 +260,7 @@ export {
   stop_playing,
   create_audio_element_from_url,
   set_audio_to_channel,
+  set_audio_id_to_channel,
   decode_audio_data,
   set_audio_element,
   set_audio_element_with_array
