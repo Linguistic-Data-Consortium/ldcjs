@@ -76,6 +76,10 @@ function callf(f){
   if(f) f(current_audio_node, playing);
 }
 
+function play_src_with_audio_id(id, src, f){
+  play_src_with_audio(audio_map.get(id).audio_object, src, f);
+}
+
 function play_src_with_audio(audio, src, f){
   if(debug){
     console.log('tryin to play');
@@ -176,14 +180,79 @@ function decode_audio_data(buffer, f){
   audio_context.decodeAudioData(buffer, f);
 }
 
+const audio_map = new Map();
+
+// most applications can use this function,
+// when there's a single file that's either mono or stereo (pass true or false to stereo)
+function set_audio_element(docid, stereo, set_urls){
+  const o = {
+    audios: [],
+    audio_elements: {},
+    docids: [ docid ],
+    stereo: stereo
+  };
+  set_audio_element_loop(o, set_urls);
+  if(stereo) setup_stereo(docid);
+}
+
+// this function allows for the special case of multiple channels in separate files
+function set_audio_element_with_array(docids, set_urls){
+  const o = {
+    audios: [],
+    audio_elements: {},
+    docids: docids,
+    stereo: false
+  };
+  set_audio_element_loop(o, set_urls);
+}
+
+// helper
+function set_audio_element_loop(o, set_urls){
+  audio_map.set(o.docids[0], o);
+  for(const x of o.docids) set_audio_element_helper(o, x, set_urls);
+  o.audio_object = o.audios[0];
+}
+
+// helper
+function set_audio_element_helper(o, id, set_urls){
+  if(id && !o.audio_elements[id]){
+    const p = set_urls(id).then( (x) => create_audio_element_from_url(x.wav_url, o.stereo) );
+    o.audio_elements[id] = p;
+    o.audios.push({
+      docid: id,
+      audio: p,
+      play_head: 0
+    });
+  }
+}
+
+// must be called if the file is stereo
+function setup_stereo(k){
+  const o = audio_map.get(k);
+  o.docids[0] = k + ':A';
+  o.docids[1] = k + ':B';
+  let v = o.audio_elements[k];
+  o.audio_elements[o.docids[0]] = v;
+  o.audio_elements[o.docids[1]] = v;
+  o.audios[0].docid = o.docids[0];
+  o.audios[1] = {
+      docid: o.docids[1],
+      audio: v,
+      play_head: 0
+  };
+}
+
 export {
   is_playing,
   set_playback_rate,
   play_callback,
   callf,
   play_src_with_audio,
+  play_src_with_audio_id,
   stop_playing,
   create_audio_element_from_url,
   set_audio_to_channel,
-  decode_audio_data
+  decode_audio_data,
+  set_audio_element,
+  set_audio_element_with_array
 }
