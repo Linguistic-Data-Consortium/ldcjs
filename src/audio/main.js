@@ -12,7 +12,6 @@ function audio_context_init(opts){
     }
   }
 }
-audio_context_init({});
 
 let debug = true;
 let playing = false;
@@ -93,6 +92,7 @@ function play_src_with_audio(audio, src, f){
 }
 
 async function play_audio_object(audio, src, f){
+  if(!audio_context) audio_context_init({});
   if(!(audio instanceof Audio)) return;
   if(playing) return;
   if( audio.readyState < 2 || audio.seekable.end(0) == 0 ){
@@ -131,6 +131,7 @@ function stop_playing(){
 
 // Jeremy Zehr worked out how to make single channel playback work for stereo
 function create_audio_element_from_url(url, stereo){
+  if(!audio_context) audio_context_init({});
   const parent = new Audio(url);
   parent.crossOrigin = 'anonymous';
   map_stereo.set(parent, {
@@ -177,6 +178,7 @@ function set_audio_to_channel(v, channel){
 }
 
 function decode_audio_data(buffer, f){
+  if(!audio_context) audio_context_init({});
   audio_context.decodeAudioData(buffer, f);
 }
 
