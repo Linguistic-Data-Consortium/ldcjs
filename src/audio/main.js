@@ -131,7 +131,6 @@ function stop_playing(){
 
 // Jeremy Zehr worked out how to make single channel playback work for stereo
 function create_audio_element_from_url(url, stereo){
-  if(!audio_context) audio_context_init({});
   const parent = new Audio(url);
   parent.crossOrigin = 'anonymous';
   map_stereo.set(parent, {
@@ -139,6 +138,7 @@ function create_audio_element_from_url(url, stereo){
       channel: 0
   });
   parent.addEventListener('play', async () => {
+    if(!audio_context) audio_context_init({});
     if (!stereo) return true;
 
     const attr = map_stereo.get(parent);
