@@ -386,6 +386,7 @@ function filename_from_date(){
 // stream: MediaStream object, probably created by getUserMedia above
 // record: boolean. true means save the audio
 function create_node_graph(args){
+  if(!audio_context) audio_context_init({});
   const chunks1 = [];
   const ac = audio_context;
   // console.log(ac);
