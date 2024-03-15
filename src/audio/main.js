@@ -408,7 +408,7 @@ function create_node_graph(args){
   let mediaRecorder;
   let processor_node = null;
   let worklet = null;
-  if(record){
+  if(args.record){
     let splitter;
     if(args.script_processor && args.audio_worklet){
       splitter = ac.createChannelSplitter(2);
