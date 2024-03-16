@@ -50,6 +50,10 @@ function request_animation_frame_loop_init(){
 }
 
 let audio_context;
+function get_audio_context(){
+  if(!audio_context) audio_context_init({});
+  return audio_context;
+}
 function audio_context_init(opts){
   if(!audio_context){
     request_animation_frame_loop_init();
@@ -495,5 +499,6 @@ export {
   getUserMedia,
   create_blob,
   filename_from_date,
-  create_node_graph
+  create_node_graph,
+  get_audio_context
 }
