@@ -110,7 +110,7 @@ function play_callback(t){
   currently_playing_audio.playbackRate = playback_rate;
 
   const now = currently_playing_audio.currentTime;
-  if(now < currently_playing_stop_time && last_now_count < 2){
+  if(now < currently_playing_stop_time && last_now_count < 10){
     if(last_now == now) last_now_count++;
     else                last_now_count = 0;
     last_now = now;
