@@ -109,7 +109,7 @@ function play_callback(t){
   currently_playing_audio.playbackRate = playback_rate;
 
   const now = currently_playing_audio.currentTime;
-  if(now < currently_playing_stop_time || now == last_now){
+  if(now < currently_playing_stop_time && now > last_now){
     last_now = now;
     if(current_audio_node) current_audio_node.play_head = round_to_3_places(now);
   }
