@@ -73,6 +73,7 @@ function audio_context_init(opts){
 let debug = true;
 let playing = false;
 let last_now = -1;
+let last_now_count = 0;
 let playback_rate = 1.0;
 let currently_playing_stop_time = 0;
 let currently_playing_offset = 0;
@@ -109,13 +110,16 @@ function play_callback(t){
   currently_playing_audio.playbackRate = playback_rate;
 
   const now = currently_playing_audio.currentTime;
-  if(now < currently_playing_stop_time && now > last_now){
+  if(now < currently_playing_stop_time && last_now_count < 2){
+    if(last_now == now) last_now_count++;
+    else                last_now_count = 0;
     last_now = now;
     if(current_audio_node) current_audio_node.play_head = round_to_3_places(now);
   }
   else{
     if(current_audio_node) current_audio_node.play_head = round_to_3_places(currently_playing_stop_time);
     stop_playing();
+    last_now_count = 0;
   }
 
   // custom_play_callback lets the client customize what happens on the playback loop.
