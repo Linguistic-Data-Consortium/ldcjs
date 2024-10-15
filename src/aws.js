@@ -276,11 +276,11 @@ function get_hlt_promisey(path, type){
 function get_hlt_promiseyy(path, type){
   const ppath = path.replace(/:[AB]$/, '');
   const wav = ppath.replace(/.+\//, '');
-  return load_awsx('promise-uploads', wav)
+  return load_awsx('promise-uploads', wav, type)
   .catch(e => {
     if(e.name == 'NoSuchKey'){
       console.log('no such key, creating...');
-      run_asr62('promises', type, ppath);
+      run_asr62('promise-uploads', type, ppath);
       return get_hlt_promisexxx(wav, type);
     }
     console.error(e);
