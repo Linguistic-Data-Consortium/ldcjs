@@ -1,10 +1,10 @@
-"use strict";
+import { GetObjectCommand } from '@aws-sdk/client-s3';
 
 // generic aws helper
 
 let f;
 
-const defaults = {region: 'us-east-1'};
+let defaults = {region: 'us-east-1'};
 let cognito;
 
 let credentials;
@@ -14,8 +14,10 @@ function refreshToken(x){
     f = x;
 s3 = fetch("/token", { method: "POST" })
   .then(res => res.json())
-  .then( t => {
-    let token = {...t};
+  .then( r => {
+    const { tok, region } = r;
+    let token = {...tok};
+    defaults = { region };
     if(!cognito) cognito = new f.CognitoIdentityClient({...defaults});
     token.client = cognito;
     credentials = f.fromCognitoIdentity(token);
@@ -34,7 +36,7 @@ const getTranscribeClient = () => {
 function getSignedUrlPromise(Bucket, Key){
   const params = { Bucket, Key };
   let cmd = new f.GetObjectCommand(params);
-  return s3.then( (s3) => f.getSignedUrl(s3, cmd, {}) );
+  return s3.then( (s3) => f.getSignedUrl(s3, cmd, { expiresIn: 3600 }) );
 }
 
 const listObjectsV2 = (Bucket) => {
@@ -76,6 +78,21 @@ function s3url(url){
   return o;
 }
 
+function S3url(url){
+  const o = s3url(url);
+  return { Bucket: o.bucket, Key: o.key };
+}
+
+function get_json_object(Bucket, Key, gets3){
+  let p;
+  if(gets3) p = gets3().then((s3) => s3.send(new GetObjectCommand({ Bucket, Key })));
+  else      p = getObject(Bucket, Key);
+  return p
+  .then((x) => x.Body)
+  .then((x) => x.transformToString())
+  .then(JSON.parse)
+}
+
 export {
   getSignedUrlPromise,
   getTranscribeClient,
@@ -85,5 +102,7 @@ export {
   putObject,
   getObject,
   refreshToken,
-  s3url
+  s3url,
+  S3url,
+  get_json_object
 }
